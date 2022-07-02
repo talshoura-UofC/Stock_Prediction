@@ -13,9 +13,12 @@ with open('Data.csv', 'r') as file:
         data.append(row)
 
 a, b = np.shape(data)   # obtaining the size of data
-print("100", a, "1")
-for i in range(a):
-    print(data[i][0], "0", "".join(data[i][1:6]))
+b = 7
+# print("100", a, b-4)
+for days in range(b-4):
+    print("100", a, b-4-days)
+    for i in range(a):
+        print(data[i][0], "0", "".join(data[i][days+1:days+5]))
 
 
 
