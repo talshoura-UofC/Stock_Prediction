@@ -12,17 +12,12 @@ with open('Data.csv', 'r') as file:
     for row in reader:      # read row by row and append to the data list
         data.append(row)
 
-a, b = np.shape(data)   # obtaining the size of data
-b = 7
-# print("100", a, b-4)
-for days in range(b-4):
-    print("100", a, b-4-days)
-    for i in range(a):
-        print(data[i][0], "0", "".join(data[i][days+1:days+5]))
+# getting the number of stocks and days
+DAYS_TO_DISPLAY = 5                     # number of prior days to display in each iteration
+num_stocks, num_data = np.shape(data)   # obtaining the size of data
+available_days = num_data - DAYS_TO_DISPLAY     # number of availble days to go throw
 
-
-
-# print("100 2 10")
-# print("A 10 4.54 5.53 6.56 5.54 7.60")
-# print("B 0 30.54 27.53 24.42 20.11 17.50")
-
+for day in range(available_days):
+    print("100", num_stocks, available_days - day)   # printing each days header
+    for i in range(num_stocks):     # printing the stocks details
+        print(data[i][0], "0", "".join(data[i][day+1:day+DAYS_TO_DISPLAY+1]))
