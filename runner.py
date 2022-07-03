@@ -18,7 +18,7 @@ with open('Data.csv', 'r') as file:
 # getting the number of stocks and days
 DAYS_TO_DISPLAY = 5                   # number of prior days to display in each iteration
 numStocks, numData = np.shape(data)   # obtaining the size of data
-available_days = numData - DAYS_TO_DISPLAY - 1    # number of availble days to go throw
+available_days = 20 #numData - DAYS_TO_DISPLAY - 1    # number of availble days to go throw
 
 currentMoney = 100
 selectedStocks = {  # initializing stocks to no ownership and current trading price
@@ -44,7 +44,8 @@ for day in range(available_days):
     p.stdin.write(outStream.encode('utf-8'))   # sending the data to output.py as bytes
     out, err = p.communicate()                 # getting the required trades
     decoded_out = out.decode('utf-8').split()  # converting and spliting the results to string
-    
+    if DEBUG: print(decoded_out)
+
     numOperations = int(decoded_out[0])
     for op in range(numOperations):
         if (decoded_out[op*3 + 2] == 'BUY'):
