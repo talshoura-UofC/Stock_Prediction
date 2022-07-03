@@ -43,6 +43,7 @@ def stock_pred(names, owned, prices, m, k):
             print("Second digree gradient", ["{:>9.2f}".format(k) for k in trends_2d[i]])
             print("average predicted value for 2d", "{:>9.2f}".format( (p1[i](num_days+1)+p2[i](num_days+1))/2 ))
             print("average predicted value for 2d", "{:>9.2f}".format( (p1[i](num_days+1)+p2[i](num_days+1)+p3[i](num_days+1))/3 ))
+            print("Owned", "{:>9.0f}".format(owned[i]))
             print('\n')
             # print("items in stock", names[i], "are", ["{:+08.2f}".format(k) for k in prices[i]])
             # print("First digree gradient ", ["{:+08.2f}".format(k) for k in trends_1d[i]])
@@ -72,35 +73,58 @@ def stock_pred(names, owned, prices, m, k):
     dataAnalysis.append([k for k in slops])     # first degree fit slope
     dataAnalysis.append([k for k in curves])    # second // fit 
     dataAnalysis.append([k for k in curv_3])    # third  // fit
+    dataAnalysis.append([k for k in owned])     # stock name
 
-    temp = np.asarray(dataAnalysis, dtype=object).T.tolist()
-    byPrice = sorted(temp, key=lambda x:float(x[1])) # sorting the items by current prices    
+    transposedData = np.asarray(dataAnalysis, dtype=object).T.tolist()
+
+
+    byPrice = sorted(transposedData, key=lambda x:float(x[1])) # sorting the items by current prices    
     if DEBUG: pandas.set_option("display.precision", 5); print(DataFrame(byPrice))
-    
-    cutoff = -1
+    buyCutoff = -1
     for i in range(numStocks):
-        if byPrice[i][1] > m:
-            cutoff = i
+        if (byPrice[i][1] > m or i==numStocks-1):
+            buyCutoff = i
             break
-    
-    if cutoff > 0:
-        possibleBuys = sorted(byPrice[0:cutoff], key=lambda x:float(x[3])) # sort by largest possible loss ratio
-        requiredBuys = np.zeros(cutoff) # to store which stocks to buy
+    if DEBUG: print("\n\nBuy Cutoff", buyCutoff)
+    requiredBuys = np.zeros(np.max([0,buyCutoff])) # to store which stocks to buy
+    if buyCutoff > 0:  # if there is anything to buy
+        possibleBuys = sorted(byPrice[0:buyCutoff], key=lambda x:float(x[3])) # sort by largest possible loss ratio
         if DEBUG: print(DataFrame(possibleBuys))
         while (m>=possibleBuys[0][1]):  # while there is money to spend
-            for i in range(cutoff):
+            for i in range(buyCutoff):
                 if (m>=possibleBuys[i][1] and possibleBuys[i][5] < 0):  # if the predected value is a loss
                     requiredBuys[i] = requiredBuys[i] + 1   # buy a stock
                     m = m-possibleBuys[i][1]    # adjusting remaining money
+            if(np.count_nonzero(requiredBuys) == 0): # if there is nothing of interest to buy
+                break
         if DEBUG:  print(requiredBuys)
     
-        print(np.count_nonzero(requiredBuys))
-        for i in range(cutoff):
-            if requiredBuys[i] > 0:
-                print(possibleBuys[i][0], 'BUY', int(requiredBuys[i]))
-    else:
-        print("0")
 
+    byOwned = sorted(transposedData, key=lambda x:int(x[9]), reverse=True) # sorting the items by current prices    
+    if DEBUG: pandas.set_option("display.precision", 5); print(DataFrame(byOwned))
+    sellCutoff = -1
+    for i in range(numStocks):
+        if byOwned[i][9] <= 0:
+            sellCutoff = i
+            break
+    if DEBUG: print("\n\nSell Cutoff", sellCutoff)
+    requiredSells = np.zeros(np.max([0,sellCutoff])) # to store which stocks to buy
+    if sellCutoff > 0:
+        possibleSells = byOwned[0:sellCutoff] # sort by largest possible loss ratio
+        if DEBUG: print(DataFrame(possibleSells))
+        for i in range(sellCutoff):
+            if(possibleSells[i][5] >= 0):
+                requiredSells[i] = possibleSells[i][9]
+        if DEBUG: print(requiredSells)
+
+    numTransactions = np.count_nonzero(requiredBuys) + np.count_nonzero(requiredSells)
+    print(numTransactions)
+    for i in range(buyCutoff):
+        if requiredBuys[i] > 0:
+            print(possibleBuys[i][0], 'BUY', int(requiredBuys[i]))
+    for i in range(sellCutoff):
+        if requiredSells[i] > 0:
+            print(possibleSells[i][0], 'SELL', int(requiredSells[i]))
 
     # print(DataFrame(dataAnalysis))
 

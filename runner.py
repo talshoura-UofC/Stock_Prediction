@@ -18,7 +18,7 @@ with open('Data.csv', 'r') as file:
 # getting the number of stocks and days
 DAYS_TO_DISPLAY = 5                   # number of prior days to display in each iteration
 numStocks, numData = np.shape(data)   # obtaining the size of data
-available_days = 20 #numData - DAYS_TO_DISPLAY - 1    # number of availble days to go throw
+available_days = 7 #numData - DAYS_TO_DISPLAY - 1    # number of availble days to go throw
 
 currentMoney = 100
 selectedStocks = {  # initializing stocks to no ownership and current trading price
@@ -66,6 +66,9 @@ for day in range(available_days):
 
     # print(numOperations)
     print(decoded_out)
+    print(currentMoney)
+    print(selectedStocks)
+    print("\n")
 
 # print(currentMoney)
 # print(selectedStocks)
