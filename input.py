@@ -13,8 +13,8 @@ with open('Data.csv', 'r') as file:
         data.append(row)
 
 a, b = np.shape(data)   # obtaining the size of data
-print("141.05", a, "46") #675.88
-day = 7 #48
-owned = [0, 1, 1, 1, 0, 0, 0, 0, 0, 2] #[0, 0, 0, 0, 0, 9, 0, 0, 0, 9]#
+print("117.09", a, "46") #675.88
+day = 47
+owned = [0, 0, 0, 0, 0, 2, 0, 1, 0, 0] #[0, 0, 0, 0, 0, 9, 0, 0, 0, 9]#
 for i in range(a):
     print(data[i][0], "{:2d}".format(owned[i]), "".join(data[i][day:day+5]))  #np.max([0,i-3])
