@@ -3,6 +3,7 @@
 # This code will read the inputs from the CLI and prints some outputs
 
 import numpy as np
+DEBUG = 1
 
 def stock_pred(names, owned, prices, k):
     prices = np.array(prices)
@@ -30,7 +31,9 @@ def stock_pred(names, owned, prices, k):
         print("1st deg poly is:", ["{:>9.2f}".format(k) for k in p1[i].c], "\t\t    predected value is:", "{:>9.2f}".format(p1[i](num_days+1)))
         print("2nd deg poly is:", ["{:>9.2f}".format(k) for k in p2[i].c], "   predected value is:", "{:>9.2f}".format(p2[i](num_days+1)))
         print("First digree gradient ", ["{:>9.2f}".format(k) for k in trends_1d[i]])
-        print("Second digree gradient", ["{:>9.2f}".format(k) for k in trends_2d[i]], '\n')
+        print("Second digree gradient", ["{:>9.2f}".format(k) for k in trends_2d[i]])
+        print("average predicted value", "{:>9.2f}".format( (p1[i](num_days+1)+p2[i](num_days+1))/2 ))
+        print('\n')
 
 
 
