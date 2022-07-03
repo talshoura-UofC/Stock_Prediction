@@ -22,6 +22,6 @@ for data in range(k):
     owned.append(int(item[1]))  # casting to int
     prices.append(list(map(float,item[2:])))    # casting to float
     
-
-for i in range(k):
-    print("items in stock", names[i], "are", prices[i])
+for lines in range(d):
+    for i in range(k):
+        print("items in stock", names[i], "are", prices[i])
